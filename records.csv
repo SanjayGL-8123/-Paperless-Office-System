@@ -1,0 +1,5 @@
+ID,Student Name,Student ID,Document Title,Category,Notes,Created At
+101,"Rahul Sharma","R24CS101","Data Structures Lab Report","Lab Report","Completed Binary Search Tree & AVL Tree implementations with test benchmarks.","2026-11-18 10:15:00"
+102,"Priya Nair","R24EC204","Digital Electronics Notes","Notes","Unit 3 Logic Gates and Karnaugh Map simplification cheat-sheet.","2026-11-18 11:30:00"
+103,"Alex Johnson","R24CS155","Cloud Computing Project Proposal","Project","Architecture diagram and cost breakdown for containerized microservices on AWS.","2026-11-18 14:05:00"
+104,"Ananya Verma","R24AI088","AI Ethics Seminar Paper","Assignment","Literature review on algorithmic fairness, bias mitigation, and data privacy in LLMs.","2026-11-18 15:40:00"

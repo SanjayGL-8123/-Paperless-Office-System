@@ -15,6 +15,29 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0600
+#endif
+
+#if defined(__clang__)
+#ifndef _X86INTRIN_H_INCLUDED
+#define _X86INTRIN_H_INCLUDED
+#endif
+#ifndef _X86GPRINTRIN_H_INCLUDED
+#define _X86GPRINTRIN_H_INCLUDED
+#endif
+#ifndef _IMMINTRIN_H_INCLUDED
+#define _IMMINTRIN_H_INCLUDED
+#endif
+#ifndef _IA32INTRIN_H_INCLUDED
+#define _IA32INTRIN_H_INCLUDED
+#endif
+#endif
+
+#ifdef _MSC_VER
+#pragma comment(lib, "ws2_32.lib")
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,10 +45,6 @@
 #include <time.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
-
-#ifdef _MSC_VER
-#pragma comment(lib, "ws2_32.lib")
-#endif
 
 #define MAX_RECORDS 2000
 #define DB_FILE "records.db"
@@ -445,10 +464,9 @@ void run_web_server(void) {
             char method[16] = {0}, url[256] = {0};
             sscanf(recv_buffer, "%15s %255s", method, url);
 
-            char client_ip[INET_ADDRSTRLEN] = "Unknown";
-            inet_ntop(AF_INET, &(client_addr.sin_addr), client_ip, INET_ADDRSTRLEN);
+            char *client_ip = inet_ntoa(client_addr.sin_addr);
 
-            printf("[HTTP] %s %-22s from %s\n", method, url, client_ip);
+            printf("[HTTP] %s %-22s from %s\n", method, url, client_ip ? client_ip : "client");
 
             // Handle CORS OPTIONS Preflight
             if (strcmp(method, "OPTIONS") == 0) {
@@ -536,7 +554,6 @@ void run_web_server(void) {
             else if ((strcmp(method, "POST") == 0 && strncmp(url, "/api/delete", 11) == 0) ||
                      (strcmp(method, "DELETE") == 0 && strncmp(url, "/api/documents", 14) == 0)) {
                 int target_id = -1;
-                // Check query string ?id=...
                 char *q = strstr(url, "?id=");
                 if (q) {
                     target_id = atoi(q + 4);

@@ -3,23 +3,141 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Paperless Office System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paperless Office & Student Portal</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <h1>🌿 Paperless Office System</h1>
-    <p>Reduce paper. Save trees. Work digitally.</p>
+    <header class="hero">
+        <div class="hero-content">
+            <h1>🌿 Paperless Office & Student Portal</h1>
+            <p class="tagline">Reduce paper. Save trees. Store and share student documents digitally.</p>
+            <div id="backendStatus" class="status-badge connecting">
+                <span class="status-dot"></span> <span id="statusText">Connecting to C Backend...</span>
+            </div>
+        </div>
+    </header>
 
-    <div class="container">
-        <input type="text" id="fileName" placeholder="Enter document name">
-        <textarea id="fileNote" placeholder="Enter document note"></textarea>
-        <button onclick="saveFile()">Save Document</button>
-    </div>
+    <main class="main-container">
+        <!-- Network Share Card for Other Students -->
+        <section class="network-card">
+            <div class="network-info">
+                <span class="network-icon">🌐</span>
+                <div>
+                    <strong>Share with Classmates / Other Students:</strong>
+                    <p class="network-hint">Any student connected to the same Wi-Fi can open this portal directly on their phone or laptop:</p>
+                    <div class="share-box">
+                        <code id="networkUrl">http://10.213.0.200:8080</code>
+                        <button class="copy-btn" onclick="copyNetworkUrl()">📋 Copy Link</button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <h2>📂 Stored Documents</h2>
-    <ul id="fileList"></ul>
+        <!-- Stats Overview -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-icon">📄</span>
+                <div class="stat-meta">
+                    <span class="stat-value" id="statDocs">0</span>
+                    <span class="stat-label">Documents Saved</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">🎓</span>
+                <div class="stat-meta">
+                    <span class="stat-value" id="statStudents">0</span>
+                    <span class="stat-label">Students Registered</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">💾</span>
+                <div class="stat-meta">
+                    <span class="stat-value" id="statStorage">records.db</span>
+                    <span class="stat-label">Persistent Storage</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Document Submission Form -->
+        <section class="form-section">
+            <h2>📝 Add New Document / Student Record</h2>
+            <form id="docForm" onsubmit="handleFormSubmit(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="studentName">Student Name *</label>
+                        <input type="text" id="studentName" placeholder="e.g. Rahul Sharma" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="studentId">Student Roll No / ID</label>
+                        <input type="text" id="studentId" placeholder="e.g. R24CS101">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="docName">Document Title *</label>
+                        <input type="text" id="docName" placeholder="e.g. Data Structures Lab Report" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category">
+                            <option value="Assignment">Assignment</option>
+                            <option value="Lab Report">Lab Report</option>
+                            <option value="Project">Project</option>
+                            <option value="Notes">Study Notes</option>
+                            <option value="Official">Official / Admin</option>
+                            <option value="General">General Document</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="docNote">Document Content / Note *</label>
+                    <textarea id="docNote" rows="4" placeholder="Enter report notes, document summary, or content..." required></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">💾 Save Document</button>
+                    <button type="button" class="btn-secondary" onclick="resetForm()">Clear Form</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Stored Documents List with Search & Filter -->
+        <section class="documents-section">
+            <div class="section-header">
+                <h2>📂 Stored Documents in Local Database</h2>
+                <div class="controls-bar">
+                    <input type="text" id="searchInput" placeholder="🔍 Search documents, students..." oninput="filterDocuments()">
+                    <select id="categoryFilter" onchange="filterDocuments()">
+                        <option value="ALL">All Categories</option>
+                        <option value="Assignment">Assignment</option>
+                        <option value="Lab Report">Lab Report</option>
+                        <option value="Project">Project</option>
+                        <option value="Notes">Study Notes</option>
+                        <option value="Official">Official</option>
+                        <option value="General">General</option>
+                    </select>
+                    <button class="btn-outline" onclick="loadDocuments()" title="Refresh records from C backend">🔄 Refresh</button>
+                    <button class="btn-outline" onclick="seedDemoRecords()" title="Restore sample demo records">🌱 Reset Demo</button>
+                </div>
+            </div>
+
+            <div id="fileList" class="document-grid">
+                <!-- Document cards dynamically populated -->
+            </div>
+            <div id="emptyMessage" class="empty-state" style="display: none;">
+                <p>No documents found. Add your first digital document above!</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>🌿 Paperless Office System &copy; 2026 &bull; Powered by C Winsock Backend & Local Database</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
